@@ -25,16 +25,16 @@ public:
 // Class to manage the calendar
 class Calendar {
 private:
-    std::map<long long, DayNotes> days;  // Using long long to store the unique ID
+    std::map<string, DayNotes> days;  // Using long long to store the unique ID
 
 public:
     // Function to add a day with notes to the calendar
-    void addDay(long long id, const DayNotes& notes) {
+    void addDay(string id, const DayNotes& notes) {
         days[id] = notes;
     }
 
     // Function to get notes for a specific day
-    DayNotes getDayNotes(long long id) {
+    DayNotes getDayNotes(string id) {
         return days[id];
     }
 };
@@ -72,16 +72,9 @@ int main() {
     cout << "ID is " << todayID << endl << endl;
 
 
-    // Set up calendar
-    Calendar myCalendar;
-
-    
-
-
 
     //Input Date to note
     cout << "Input date (mm/dd/yyyy): ";
-
 
     //Input date to check/edit
     tm inputDateTime{};
@@ -94,28 +87,25 @@ int main() {
     }
     string inputID = dateToID(inputDateTime);
     
-    cout << "ID is " << inputID << endl;
+    cout << "ID is " << inputID << endl << endl;
 
 
-
+    // Set up calendar
+    Calendar myCalendar;
 
     // Add notes for a day
-    //DayNotes notes1;
-    //notes1.dayQuality = 8;
-    //notes1.sleepQuality = 9;
-    //notes1.tookMeds = true;
+    DayNotes notes1;
+    notes1.dayQuality = 8;
+    notes1.sleepQuality = 9;
+    notes1.tookMeds = true;
 
-
-
-
-
-    //myCalendar.addDay(InputDate, notes1);
+    myCalendar.addDay(inputID, notes1);
 
     // Retrieve and print notes for the day
-    //DayNotes retrievedNotes = myCalendar.getDayNotes(InputDate);
-    //cout << "Day Quality: " << retrievedNotes.dayQuality << endl;
-    //cout << "Sleep Quality: " << retrievedNotes.sleepQuality << endl;
-    //cout << "Took Meds: " << (retrievedNotes.tookMeds ? "Yes" : "No") << endl;
+    DayNotes retrievedNotes = myCalendar.getDayNotes(inputID);
+    cout << "Day Quality: " << retrievedNotes.dayQuality << endl;
+    cout << "Sleep Quality: " << retrievedNotes.sleepQuality << endl;
+    cout << "Took Meds: " << (retrievedNotes.tookMeds ? "Yes" : "No") << endl;
 
 
     return 0;
