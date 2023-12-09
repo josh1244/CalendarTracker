@@ -9,6 +9,7 @@
 #include <iomanip>
 #include <string>
 #include <fstream>
+#include <algorithm>
 // Include the cereal headers
 #include <cereal/archives/binary.hpp>
 #include <cereal/types/map.hpp>
@@ -161,8 +162,7 @@ int main() {
     
     // Input Date
     tm inputDateTime{};
-    int a{ 0 };
-    while (a == 0 ) { // Make sure input is valid
+    while (1) { // Make sure input is valid
         cout << "Input date (mm/dd/yyyy): ";
         // Initialize the tm structure with zeros
         memset(&inputDateTime, 0, sizeof(inputDateTime));
@@ -178,7 +178,7 @@ int main() {
         }
         else {
             cout << "You entered: " << put_time(&inputDateTime, "%c") << endl; 
-            a = 1; // Continue
+            break;
         }
     }
     string inputID = dateToID(inputDateTime);
@@ -194,11 +194,107 @@ int main() {
     
     cout << endl;
 
+
+
+
+
+
+
     // Add notes for a day
     DayNotes notes;
-    notes.dayQuality = 8;
-    notes.sleepQuality = 9;
-    notes.tookMeds = true;
+ 
+
+    // Day Quality
+    while (1) { // Make sure input is valid
+        cout << "Input Day Quality: ";
+        int temp{ 1 }; //Use temp to make sure input is valid and to store numerical input
+        string input{}; // Declare a string variable to store the input
+        cin >> input;
+        for (char c : input) { // Loop through each character in the input
+            if (!std::isdigit(c)) { // If the character is not a digit
+                temp = 0; // Invalid
+                break;
+            }
+        }
+        if (temp == 1) { // If the input is a valid integer
+            temp = stoi(input); // Convert the input to an integer
+            temp = clamp(temp, 0, 10); // Clamp the input to the range of 0 to 10
+        }
+        else { // If the input is not a valid integer
+            // Print an error message and try again
+            cerr << "Invalid input" << endl;
+            cin.clear(); // Clear the fail state
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore the remaining input
+            continue; // Skip the rest of the loop
+        }
+        // Success
+    // Use setw and setfill to format the output
+        cout << "You entered: " << temp << endl;
+        notes.dayQuality = temp;
+        break;
+    }
+    cout << endl;
+
+    // Sleep Quality
+    while (1) { // Make sure input is valid
+        cout << "Input Sleep Quality: ";
+        int temp{ 1 }; //Use temp to make sure input is valid and to store numerical input
+        string input{}; // Declare a string variable to store the input
+        cin >> input;
+        for (char c : input) { // Loop through each character in the input
+            if (!std::isdigit(c)) { // If the character is not a digit
+                temp = 0; // Invalid
+                break;
+            }
+        }
+        if (temp == 1) { // If the input is a valid integer
+            temp = stoi(input); // Convert the input to an integer
+            temp = clamp(temp, 0, 10); // Clamp the input to the range of 0 to 10
+        }
+        else { // If the input is not a valid integer
+            // Print an error message and try again
+            cerr << "Invalid input" << endl;
+            cin.clear(); // Clear the fail state
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore the remaining input
+            continue; // Skip the rest of the loop
+        }
+        // Success
+    // Use setw and setfill to format the output
+        cout << "You entered: " << temp << endl;
+        notes.sleepQuality = temp;
+        break;
+    }
+    cout << endl;
+
+    // Took Meds
+    while (1) { // Make sure input is valid
+        cout << "Took Meds?: ";
+        bool temp{};
+        string input{}; // Declare a string variable to store the input
+        cin >> input;
+        // Convert the input to lowercase
+        transform(input.begin(), input.end(), input.begin(), ::tolower);
+
+        if (input == "1" || input == "yes" || input == "true" || input == "y") {
+            temp = true;
+        }
+        else if (input == "0" || input == "no" || input == "false" || input == "n") {
+            temp = false;
+        }
+        else {
+            // Invalid input, try again
+            cin.clear(); // Clear the fail state
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore the remaining input
+            cout << "Invalid input" << endl;
+            continue; // Skip the rest of the loop
+        }
+        // Success
+        cout << "You entered: " << (temp ? "Yes" : "No") << endl;
+        notes.tookMeds = temp;
+        break;
+    }
+    cout << endl;
+
 
     myCalendar.addDay(inputID, notes);
 
@@ -218,11 +314,8 @@ int main() {
 
 /*
 Next steps
-Show notes for today
-Show notes for inputted date
 Add a function to display output
 Loop script
-save notes properly
 Input Note varaibles
 Change what notes can contain
 If notes for that day does not exist, then say "no notes for day" instead of 0's
