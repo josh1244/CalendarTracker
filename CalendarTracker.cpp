@@ -125,8 +125,9 @@ string dateToID(tm Date)
 
     // Create a string in the desired format
     string ID = to_string(weekNumber) + to_string(dayOfWeek) + to_string(year);
-    int number_of_zeros = 7 - ID.length(); // add zero if weekNumber is single digit
-    ID.insert(0, number_of_zeros, '0');
+    if (ID.length() == 6) { // add zero if weekNumber is single digit
+        ID.insert(0, 1, '0');
+    }
 
     //cout << weekNumber << endl << dayOfWeek << endl << year << endl; //Output info if needed to test
 
@@ -137,6 +138,7 @@ string dateToID(tm Date)
 int main() {
     // Load Calendar data
     Calendar myCalendar = loadFromFile("calendar");
+    DayNotes retrievedNotes;
 
     // Get the current time
     time_t t = time(0);
@@ -147,37 +149,62 @@ int main() {
     cout << "Today is  " << put_time(&now, "%c") << endl;
     cout << "ID is " << todayID << endl << endl;
 
+    //Display today's Notes
+    retrievedNotes = myCalendar.getDayNotes(todayID);
+    cout << "Day Quality: " << retrievedNotes.dayQuality << endl;
+    cout << "Sleep Quality: " << retrievedNotes.sleepQuality << endl;
+    cout << "Took Meds: " << (retrievedNotes.tookMeds ? "Yes" : "No") << endl;
 
 
-    //Input Date to note
-    cout << "Input date (mm/dd/yyyy): ";
 
-    //Input date to check/edit
+
+    
+    // Input Date
     tm inputDateTime{};
-    cin >> get_time(&inputDateTime, "%m/%d/%Y");
-    if (cin.fail()) {
-        cout << "Invalid input\n";
-    }
-    else {
-        cout << "You entered: " << put_time(&inputDateTime, "%c") << endl;
+    int a{ 0 };
+    while (a == 0 ) { // Make sure input is valid
+        cout << "Input date (mm/dd/yyyy): ";
+        // Initialize the tm structure with zeros
+        memset(&inputDateTime, 0, sizeof(inputDateTime));
+
+        cin >> get_time(&inputDateTime, "%m/%d/%Y");
+        if (cin.fail()) {
+            //Try again
+            cin.clear(); 
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+            cout << "Invalid input" << endl; 
+            
+        }
+        else {
+            cout << "You entered: " << put_time(&inputDateTime, "%c") << endl; 
+            a = 1; // Continue
+        }
     }
     string inputID = dateToID(inputDateTime);
     
     cout << "ID is " << inputID << endl << endl;
 
-
+    // Retrieve and print notes for the day
+    cout << "Current Notes: " << endl;
+    retrievedNotes = myCalendar.getDayNotes(inputID);
+    cout << "Day Quality: " << retrievedNotes.dayQuality << endl;
+    cout << "Sleep Quality: " << retrievedNotes.sleepQuality << endl;
+    cout << "Took Meds: " << (retrievedNotes.tookMeds ? "Yes" : "No") << endl;
     
+    cout << endl;
 
     // Add notes for a day
-    DayNotes notes1;
-    notes1.dayQuality = 8;
-    notes1.sleepQuality = 9;
-    notes1.tookMeds = true;
+    DayNotes notes;
+    notes.dayQuality = 8;
+    notes.sleepQuality = 9;
+    notes.tookMeds = true;
 
-    myCalendar.addDay(inputID, notes1);
+    myCalendar.addDay(inputID, notes);
 
     // Retrieve and print notes for the day
-    DayNotes retrievedNotes = myCalendar.getDayNotes(inputID);
+    cout << "New Notes: " << endl;
+    retrievedNotes = myCalendar.getDayNotes(inputID);
     cout << "Day Quality: " << retrievedNotes.dayQuality << endl;
     cout << "Sleep Quality: " << retrievedNotes.sleepQuality << endl;
     cout << "Took Meds: " << (retrievedNotes.tookMeds ? "Yes" : "No") << endl;
@@ -193,9 +220,11 @@ int main() {
 Next steps
 Show notes for today
 Show notes for inputted date
+Add a function to display output
 Loop script
 save notes properly
 Input Note varaibles
 Change what notes can contain
+If notes for that day does not exist, then say "no notes for day" instead of 0's
 
 */
