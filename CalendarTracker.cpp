@@ -11,10 +11,9 @@
 #include <map>
 #include <string>
 #include <vector> 
-// Include the cereal headers
-#include <cereal/archives/binary.hpp>
-#include <cereal/types/map.hpp>
-#include <cereal/types/string.hpp>
+#include <cereal/archives/binary.hpp> // Include the cereal headers
+#include <cereal/types/map.hpp> // Include the cereal headers
+#include <cereal/types/string.hpp> // Include the cereal headers
 
 using namespace std;
 
@@ -72,8 +71,8 @@ public:
 	}
 };
 
-//Function to load calendar from file
-Calendar loadFromFile(string fileName) {
+// Function to load calendar from file
+static Calendar loadFromFile(string fileName) {
 	// Setup variable to handle file
 	ifstream inFile;
 	Calendar data;
@@ -99,8 +98,8 @@ Calendar loadFromFile(string fileName) {
 	return data;
 }
 
-//Function to save calendar to file
-void saveToFile(string fileName, Calendar data) {
+// Function to save calendar to file
+static void saveToFile(string fileName, Calendar data) {
 	// Setup variable to handle file
 	ofstream outFile;
 
@@ -120,11 +119,11 @@ void saveToFile(string fileName, Calendar data) {
 	outFile.close();
 }
 
-// Function to convert tm date to ID
+// Function to convert tm date to string ID
 static string dateToID(tm date)
 {
 	// normalize the date and time values
-	std::mktime(&date); 
+	std::mktime(&date);
 
 	// Extract week number, day of the week, and year
 	int dayOfWeek = date.tm_wday; // Week begins at 0 on Sunday
@@ -134,7 +133,7 @@ static string dateToID(tm date)
 
 	// DayOfWeek-Month-DayOfMonth-Year
 	string ID{ 0 };
-	
+
 	ID.append(to_string(dayOfWeek));
 	ID.append("-");
 	if (to_string(month).length() == 1) { // add zero if month is single digit
@@ -153,6 +152,7 @@ static string dateToID(tm date)
 	return ID;
 }
 
+// Function to convert string ID to tm date
 static tm IDToDate(string ID) {
 	std::tm date{};
 	std::vector<std::string> parts = split(ID, '-'); // split the string by the hyphen character
@@ -164,7 +164,8 @@ static tm IDToDate(string ID) {
 	return date;
 }
 
-void displayNotes(DayNotes Notes) {
+// Function to display notes
+static void displayNotes(DayNotes Notes) {
 	// Display Notes
 	std::cout << "Day Quality: " << Notes.dayQuality << std::endl;
 	std::cout << "Sleep Quality: " << Notes.sleepQuality << std::endl;
@@ -172,11 +173,12 @@ void displayNotes(DayNotes Notes) {
 	std::cout << endl;
 }
 
-void drawCalendar(string ID) {
+// Function to draw Calendar
+static void drawCalendar(string ID) {
 	tm date = IDToDate(ID);
 
 	// Convert date to time_t
-	time_t t = std::mktime(&date); 
+	time_t t = std::mktime(&date);
 
 	// Extract week number, day of the week, and year
 	int weekNumber = date.tm_yday / 7 + 1; // Display in front of calendar
@@ -246,17 +248,17 @@ int main() {
 			cin.clear();
 			cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-            cout << "Invalid input" << endl; 
-            
-        }
-        else {
-            cout << "You entered: " << put_time(&inputDateTime, "%c") << endl; 
-            break;
-        }
-    }
-    string inputID = dateToID(inputDateTime);
-    
-    cout << "ID is " << inputID << endl << endl;
+			cout << "Invalid input" << endl;
+
+		}
+		else {
+			cout << "You entered: " << put_time(&inputDateTime, "%c") << endl;
+			break;
+		}
+	}
+	string inputID = dateToID(inputDateTime);
+
+	cout << "ID is " << inputID << endl << endl;
 
 	// Retrieve and print notes for the day
 	cout << "Current Notes: " << endl;
@@ -376,8 +378,6 @@ int main() {
 
 	return 0;
 }
-
-
 
 /*
 Next steps
