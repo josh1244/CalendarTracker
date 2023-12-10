@@ -10,6 +10,7 @@
 #include <string>
 #include <fstream>
 #include <algorithm>
+#include <chrono>
 // Include the cereal headers
 #include <cereal/archives/binary.hpp>
 #include <cereal/types/map.hpp>
@@ -68,20 +69,13 @@ Calendar loadFromFile(string fileName) {
     // Open File
     inFile.open("calendar");
     if (!inFile) {
-        cout << "No calendar found. Making new one.\n";
+        std::cout << "No calendar found. Making new one." << std::endl;
         return data;
     }
-
-    /*
-    // Load from file
-    inFile.read((char*)&data, sizeof(data)); //For classes
-
-    // Close the file
-    inFile.close();
-
-    return data;
-    */
-
+    if (inFile.peek() == EOF) {
+        std::cout << "No calendar found. Making new one." << std::endl;
+        return data;
+    }
 
     // Load from file
     cereal::BinaryInputArchive iarchive(inFile); // Create a cereal input archive
@@ -143,6 +137,42 @@ void displayNotes(DayNotes Notes) {
     std::cout << endl;
 }
 
+void drawCalendar(tm Date) {
+    time_t t = mktime(&Date); // Convert date to time_t
+
+    // Extract week number, day of the week, and year
+    int weekNumber = Date.tm_yday / 7 + 1; // Display in front of calendar
+    int day = Date.tm_mday;
+    int dayOfWeek = Date.tm_wday; // First day is 1 Sunday
+    string year = std::to_string(Date.tm_year + 1900);
+    
+    //Figure out the days of the week
+    int days[7];
+    time_t t2;
+    for (int i = 0; i < 7; i++) {
+        t2 = t - (dayOfWeek - i) * (static_cast<long long>(24 * 60) * 60);
+        tm prev;
+        localtime_s(&prev, &t2);
+        days[i] = prev.tm_mday;
+        //int sunday = sundayDay.tm_mday;
+    }
+    //if (day < 7 or > 22) then something else
+    //int day1 = day - dayOfWeek;
+    std::cout << "Week: " << weekNumber << "                           " << year << std::endl;
+    std::cout << "  _______________________________________________________________________" << std::endl;
+    std::cout << "  |  Sunday |  Monday | Tuesday |Wednesday| Thursday| Friday  | Saturday|" << std::endl;
+    //cout << weekNumber << std::setw(2 - std::to_string(weekNumber).length()) <<
+    std::cout << "  |   " << std::setw(2) << days[0] <<
+               "    |   " << std::setw(2) << days[1] <<
+               "    |   " << std::setw(2) << days[2] <<
+               "    |   " << std::setw(2) << days[3] <<
+               "    |   " << std::setw(2) << days[4] <<
+               "    |   " << std::setw(2) << days[5] <<
+               "    |   " << std::setw(2) << days[6] <<
+               "    |" << std::endl;
+    std::cout << "  |_________|_________|_________|_________|_________|_________|_________|" << std::endl;
+}
+
 int main() {
     // Load Calendar data
     Calendar myCalendar = loadFromFile("calendar");
@@ -161,7 +191,7 @@ int main() {
     // Display today's Notes
     displayNotes(retrievedNotes);
    
-
+    drawCalendar(now);
 
     
     // Input Date
