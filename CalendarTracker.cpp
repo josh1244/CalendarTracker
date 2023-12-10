@@ -135,6 +135,13 @@ string dateToID(tm Date)
     return ID;
 }
 
+void displayNotes(DayNotes Notes) {
+    // Display Notes
+    std::cout << "Day Quality: " << Notes.dayQuality << std::endl;
+    std::cout << "Sleep Quality: " << Notes.sleepQuality << std::endl;
+    std::cout << "Took Meds: " << (Notes.tookMeds ? "Yes" : "No") << std::endl;
+    std::cout << endl;
+}
 
 int main() {
     // Load Calendar data
@@ -150,13 +157,10 @@ int main() {
     cout << "Today is  " << put_time(&now, "%c") << endl;
     cout << "ID is " << todayID << endl << endl;
 
-    //Display today's Notes
     retrievedNotes = myCalendar.getDayNotes(todayID);
-    cout << "Day Quality: " << retrievedNotes.dayQuality << endl;
-    cout << "Sleep Quality: " << retrievedNotes.sleepQuality << endl;
-    cout << "Took Meds: " << (retrievedNotes.tookMeds ? "Yes" : "No") << endl;
-
-
+    // Display today's Notes
+    displayNotes(retrievedNotes);
+   
 
 
     
@@ -188,11 +192,7 @@ int main() {
     // Retrieve and print notes for the day
     cout << "Current Notes: " << endl;
     retrievedNotes = myCalendar.getDayNotes(inputID);
-    cout << "Day Quality: " << retrievedNotes.dayQuality << endl;
-    cout << "Sleep Quality: " << retrievedNotes.sleepQuality << endl;
-    cout << "Took Meds: " << (retrievedNotes.tookMeds ? "Yes" : "No") << endl;
-    
-    cout << endl;
+    displayNotes(retrievedNotes);
 
 
 
@@ -301,9 +301,7 @@ int main() {
     // Retrieve and print notes for the day
     cout << "New Notes: " << endl;
     retrievedNotes = myCalendar.getDayNotes(inputID);
-    cout << "Day Quality: " << retrievedNotes.dayQuality << endl;
-    cout << "Sleep Quality: " << retrievedNotes.sleepQuality << endl;
-    cout << "Took Meds: " << (retrievedNotes.tookMeds ? "Yes" : "No") << endl;
+    displayNotes(retrievedNotes);
 
     saveToFile("calendar", myCalendar);
 
@@ -314,9 +312,7 @@ int main() {
 
 /*
 Next steps
-Add a function to display output
 Loop script
-Input Note varaibles
 Change what notes can contain
 If notes for that day does not exist, then say "no notes for day" instead of 0's
 
