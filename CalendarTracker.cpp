@@ -3,6 +3,9 @@
 
 #define __STDC_WANT_LIB_EXT1__ 1
 #include <algorithm>
+#include <cereal/archives/binary.hpp> // Include the cereal headers
+#include <cereal/types/map.hpp> // Include the cereal headers
+#include <cereal/types/string.hpp> // Include the cereal headers
 #include <chrono>
 #include <ctime>
 #include <fstream>
@@ -11,9 +14,6 @@
 #include <map>
 #include <string>
 #include <vector> 
-#include <cereal/archives/binary.hpp> // Include the cereal headers
-#include <cereal/types/map.hpp> // Include the cereal headers
-#include <cereal/types/string.hpp> // Include the cereal headers
 
 using namespace std;
 
@@ -157,7 +157,7 @@ static tm IDToDate(string ID) {
 	std::tm date{};
 	std::vector<std::string> parts = split(ID, '-'); // split the string by the hyphen character
 	string WeekDay = parts[0]; // Day of Week Ignored
-	date.tm_mon = stoi(parts[1]) - 1; // Month
+	date.tm_mon = stoi(parts[1]) - 1; // Month 0-11
 	date.tm_mday = stoi(parts[2]); // Day
 	date.tm_year = stoi(parts[3]) - 1900; //Year
 	std::mktime(&date);
@@ -182,7 +182,7 @@ static void drawCalendar(string ID) {
 
 	// Extract week number, day of the week, and year
 	int weekNumber = date.tm_yday / 7 + 1; // Display in front of calendar
-	int day = date.tm_mday;
+	int day = date.tm_mday; // Day of the month
 	int dayOfWeek = date.tm_wday; // First day is 0 Sunday
 	string year = std::to_string(date.tm_year + 1900);
 
@@ -196,14 +196,56 @@ static void drawCalendar(string ID) {
 		days[i] = prev.tm_mday;
 		//int sunday = sundayDay.tm_mday;
 	}
-	//if (day < 7 or > 22) then something else
-	//int day1 = day - dayOfWeek;
-	//Add month name
-	std::cout << "Week: " << weekNumber << "                           " << year << std::endl;
-	std::cout << "  _______________________________________________________________________" << std::endl;
-	std::cout << "  |  Sunday |  Monday | Tuesday |Wednesday| Thursday| Friday  | Saturday|" << std::endl;
+
+	// Asign month name to month
+	string month{};
+	switch (date.tm_mon) {
+	case (0):
+		month = "January";
+		break;
+	case (1):
+		month = "Febuary";
+		break;
+	case (2):
+		month = "March";
+		break;
+	case (3):
+		month = "April";
+		break;
+	case (4):
+		month = "May";
+		break;
+	case (5):
+		month = "June";
+		break;
+	case (6):
+		month = "July";
+		break;
+	case (7):
+		month = "August";
+		break;
+	case (8):
+		month = "September";
+		break;
+	case (9):
+		month = "October";
+		break;
+	case (10):
+		month = "November";
+		break;
+	case (11):
+		month = "December";
+		break;
+	default:
+		month = "MONTH ERROR";
+	}
+
+	std::cout << "Week: " << weekNumber << "                         " << year << std::endl;
+	std::cout << month << std::endl;
+	std::cout << "_______________________________________________________________________" << std::endl;
+	std::cout << "|  Sunday |  Monday | Tuesday |Wednesday| Thursday| Friday  | Saturday|" << std::endl;
 	//cout << weekNumber << std::setw(2 - std::to_string(weekNumber).length()) <<
-	std::cout << "  |   " << std::setw(2) << days[0] <<
+	std::cout << "|   " << std::setw(2) << days[0] <<
 		"    |   " << std::setw(2) << days[1] <<
 		"    |   " << std::setw(2) << days[2] <<
 		"    |   " << std::setw(2) << days[3] <<
@@ -211,7 +253,7 @@ static void drawCalendar(string ID) {
 		"    |   " << std::setw(2) << days[5] <<
 		"    |   " << std::setw(2) << days[6] <<
 		"    |" << std::endl;
-	std::cout << "  |_________|_________|_________|_________|_________|_________|_________|" << std::endl;
+	std::cout << "|_________|_________|_________|_________|_________|_________|_________|" << std::endl;
 }
 
 int main() {
@@ -228,11 +270,15 @@ int main() {
 	cout << "Today is  " << put_time(&now, "%c") << endl;
 	cout << "ID is " << todayID << endl << endl;
 
-	retrievedNotes = myCalendar.getDayNotes(todayID);
+
+	// Draw Calendar
+	drawCalendar(todayID);
 	// Display today's Notes
+	retrievedNotes = myCalendar.getDayNotes(todayID);
 	displayNotes(retrievedNotes);
 
-	drawCalendar(todayID);
+
+
 
 
 	// Input Date
@@ -259,6 +305,9 @@ int main() {
 	string inputID = dateToID(inputDateTime);
 
 	cout << "ID is " << inputID << endl << endl;
+
+	// Draw Calendar
+	drawCalendar(inputID);
 
 	// Retrieve and print notes for the day
 	cout << "Current Notes: " << endl;
@@ -384,7 +433,6 @@ Next steps
 Loop script
 Change what notes can contain
 If notes for that day does not exist, then say "no notes for day" instead of 0's
-Add month to drawCalendar
-Move Notes for day under calendar
+Move Notes for day under that day
 
 */
