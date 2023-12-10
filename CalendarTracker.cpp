@@ -15,8 +15,6 @@
 #include <string>
 #include <vector> 
 
-using namespace std;
-
 // A helper function to split a string by a delimiter
 static std::vector<std::string> split(const std::string& s, char delim)
 {
@@ -50,16 +48,16 @@ public:
 // Class to manage the calendar
 class Calendar {
 private:
-	std::map<string, DayNotes> days;  // Using string to store the unique ID
+	std::map<std::string, DayNotes> days;  // Using string to store the unique ID
 
 public:
 	// Function to add a day with notes to the calendar
-	void addDay(string id, const DayNotes& notes) {
+	void addDay(std::string id, const DayNotes& notes) {
 		days[id] = notes;
 	}
 
 	// Function to get notes for a specific day
-	DayNotes getDayNotes(string id) {
+	DayNotes getDayNotes(std::string id) {
 		return days[id];
 	}
 
@@ -72,9 +70,9 @@ public:
 };
 
 // Function to load calendar from file
-static Calendar loadFromFile(string fileName) {
+static Calendar loadFromFile(std::string fileName) {
 	// Setup variable to handle file
-	ifstream inFile;
+	std::ifstream inFile;
 	Calendar data;
 
 	// Open File
@@ -99,14 +97,14 @@ static Calendar loadFromFile(string fileName) {
 }
 
 // Function to save calendar to file
-static void saveToFile(string fileName, Calendar data) {
+static void saveToFile(std::string fileName, Calendar data) {
 	// Setup variable to handle file
-	ofstream outFile;
+	std::ofstream outFile;
 
 	// Open File
 	outFile.open("calendar");
 	if (!outFile) {
-		cout << "No calendar found. Making new one.\n";
+		std::cout << "No calendar found. Making new one.\n";
 	}
 
 	// Save to file
@@ -120,7 +118,7 @@ static void saveToFile(string fileName, Calendar data) {
 }
 
 // Function to convert tm date to string ID
-static string dateToID(tm date)
+static std::string dateToID(tm date)
 {
 	// normalize the date and time values
 	std::mktime(&date);
@@ -132,31 +130,31 @@ static string dateToID(tm date)
 	int year = date.tm_year + 1900; // Year since 1900
 
 	// DayOfWeek-Month-DayOfMonth-Year
-	string ID{ 0 };
+	std::string ID{ 0 };
 
-	ID.append(to_string(dayOfWeek));
+	ID.append(std::to_string(dayOfWeek));
 	ID.append("-");
-	if (to_string(month).length() == 1) { // add zero if month is single digit
+	if (std::to_string(month).length() == 1) { // add zero if month is single digit
 		ID.append("0");
 	}
-	ID.append(to_string(month));
+	ID.append(std::to_string(month));
 	ID.append("-");
-	if (to_string(dayOfMonth).length() == 1) { // add zero if dayOfMonth is single digit
+	if (std::to_string(dayOfMonth).length() == 1) { // add zero if dayOfMonth is single digit
 		ID.append("0");
 		//ID.insert(0, 1, '0');
 	}
-	ID.append(to_string(dayOfMonth));
+	ID.append(std::to_string(dayOfMonth));
 	ID.append("-");
-	ID.append(to_string(year));
+	ID.append(std::to_string(year));
 
 	return ID;
 }
 
 // Function to convert string ID to tm date
-static tm IDToDate(string ID) {
+static tm IDToDate(std::string ID) {
 	std::tm date{};
 	std::vector<std::string> parts = split(ID, '-'); // split the string by the hyphen character
-	string WeekDay = parts[0]; // Day of Week Ignored
+	std::string WeekDay = parts[0]; // Day of Week Ignored
 	date.tm_mon = stoi(parts[1]) - 1; // Month 0-11
 	date.tm_mday = stoi(parts[2]); // Day
 	date.tm_year = stoi(parts[3]) - 1900; //Year
@@ -170,11 +168,11 @@ static void displayNotes(DayNotes Notes) {
 	std::cout << "Day Quality: " << Notes.dayQuality << std::endl;
 	std::cout << "Sleep Quality: " << Notes.sleepQuality << std::endl;
 	std::cout << "Took Meds: " << (Notes.tookMeds ? "Yes" : "No") << std::endl;
-	std::cout << endl;
+	std::cout << std::endl;
 }
 
 // Function to draw Calendar
-static void drawCalendar(string ID) {
+static void drawCalendar(std::string ID) {
 	tm date = IDToDate(ID);
 
 	// Convert date to time_t
@@ -184,7 +182,7 @@ static void drawCalendar(string ID) {
 	int weekNumber = date.tm_yday / 7 + 1; // Display in front of calendar
 	int day = date.tm_mday; // Day of the month
 	int dayOfWeek = date.tm_wday; // First day is 0 Sunday
-	string year = std::to_string(date.tm_year + 1900);
+	std::string year = std::to_string(date.tm_year + 1900);
 
 	//Figure out the days of the week
 	int days[7]{};
@@ -198,7 +196,7 @@ static void drawCalendar(string ID) {
 	}
 
 	// Asign month name to month
-	string month{};
+	std::string month{};
 	switch (date.tm_mon) {
 	case (0):
 		month = "January";
@@ -257,6 +255,8 @@ static void drawCalendar(string ID) {
 }
 
 int main() {
+	using namespace std;
+
 	// Load Calendar data
 	Calendar myCalendar = loadFromFile("calendar");
 	DayNotes retrievedNotes;
@@ -434,5 +434,6 @@ Loop script
 Change what notes can contain
 If notes for that day does not exist, then say "no notes for day" instead of 0's
 Move Notes for day under that day
+Highlight Current day
 
 */
