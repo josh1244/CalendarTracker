@@ -246,17 +246,17 @@ int main() {
 			cin.clear();
 			cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-			cout << "Invalid input" << endl;
-
-		}
-		else {
-			cout << "You entered: " << put_time(&inputDateTime, "%c") << endl;
-			break;
-		}
-	}
-	string inputID = dateToID(inputDateTime);
-	drawCalendar(inputID);
-	cout << "ID is " << inputID << endl << endl;
+            cout << "Invalid input" << endl; 
+            
+        }
+        else {
+            cout << "You entered: " << put_time(&inputDateTime, "%c") << endl; 
+            break;
+        }
+    }
+    string inputID = dateToID(inputDateTime);
+    
+    cout << "ID is " << inputID << endl << endl;
 
 	// Retrieve and print notes for the day
 	cout << "Current Notes: " << endl;
