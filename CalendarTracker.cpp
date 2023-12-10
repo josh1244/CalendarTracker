@@ -216,7 +216,7 @@ int main() {
         }
     }
     string inputID = dateToID(inputDateTime);
-    
+    drawCalendar(inputDateTime);
     cout << "ID is " << inputID << endl << endl;
 
     // Retrieve and print notes for the day
