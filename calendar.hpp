@@ -69,7 +69,7 @@ namespace cal
 		cal::Calendar data;
 
 		// Open File
-		inFile.open("calendar");
+		inFile.open("calendarData");
 		if (!inFile) {
 			std::cout << "No calendar found. Making new one." << std::endl;
 			return data;
@@ -95,7 +95,7 @@ namespace cal
 		std::ofstream outFile;
 
 		// Open File
-		outFile.open("calendar");
+		outFile.open("calendarData");
 		if (!outFile) {
 			std::cout << "No calendar found. Making new one.\n";
 		}
