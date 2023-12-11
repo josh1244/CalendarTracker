@@ -4,23 +4,24 @@
 #pragma once
 
 // Include the necessary headers or forward declarations
+#include "ID.hpp"
+
+// cereal is used for serialization
+#include <cereal/archives/binary.hpp> // Include the cereal headers
+#include <cereal/types/map.hpp> // Include the cereal headers
+#include <cereal/types/string.hpp> // Include the cereal headers
+#include <ctime> // Used for tm
+#include <fstream> // Used for ifstream ofstream
+#include <iomanip> // Used for setw
+#include <iostream> // Used for cin cout endl
+#include <map> // Used for map
+#include <string> // Used for string
+#include <vector> // Used for vector
+
 
 // Use a namespace to avoid name conflicts
 namespace cal
 {
-	// A helper function to split a string by a delimiter
-	static std::vector<std::string> split(const std::string& s, char delim)
-	{
-		std::vector<std::string> result;
-		std::string token;
-		std::istringstream iss(s);
-		while (std::getline(iss, token, delim))
-		{
-			result.push_back(token);
-		}
-		return result;
-	}
-
 	// Class to represent notes for a day
 	class DayNotes {
 	public:
@@ -104,55 +105,8 @@ namespace cal
 		cereal::BinaryOutputArchive oarchive(outFile); // Create a cereal output archive
 		oarchive(data); // Serialize the data
 
-		//outFile.write((char*)&data, sizeof(data));
-
 		// Close the file
 		outFile.close();
-	}
-
-	// Function to convert tm date to string ID
-	static std::string dateToID(tm date)
-	{
-		// normalize the date and time values
-		std::mktime(&date);
-
-		// Extract week number, day of the week, and year
-		int dayOfWeek = date.tm_wday; // Week begins at 0 on Sunday
-		int dayOfMonth = date.tm_mday; // Day of month
-		int month = date.tm_mon + 1; // Month is 1-12
-		int year = date.tm_year + 1900; // Year since 1900
-
-		// DayOfWeek-Month-DayOfMonth-Year
-		std::string ID{ 0 };
-
-		ID.append(std::to_string(dayOfWeek));
-		ID.append("-");
-		if (std::to_string(month).length() == 1) { // add zero if month is single digit
-			ID.append("0");
-		}
-		ID.append(std::to_string(month));
-		ID.append("-");
-		if (std::to_string(dayOfMonth).length() == 1) { // add zero if dayOfMonth is single digit
-			ID.append("0");
-			//ID.insert(0, 1, '0');
-		}
-		ID.append(std::to_string(dayOfMonth));
-		ID.append("-");
-		ID.append(std::to_string(year));
-
-		return ID;
-	}
-
-	// Function to convert string ID to tm date
-	static tm IDToDate(std::string ID) {
-		std::tm date{};
-		std::vector<std::string> parts = split(ID, '-'); // split the string by the hyphen character
-		std::string WeekDay = parts[0]; // Day of Week Ignored
-		date.tm_mon = stoi(parts[1]) - 1; // Month 0-11
-		date.tm_mday = stoi(parts[2]); // Day
-		date.tm_year = stoi(parts[3]) - 1900; //Year
-		std::mktime(&date);
-		return date;
 	}
 
 	// Function to display notes
@@ -235,7 +189,6 @@ namespace cal
 		std::cout << month << std::endl;
 		std::cout << "_______________________________________________________________________" << std::endl;
 		std::cout << "|  Sunday |  Monday | Tuesday |Wednesday| Thursday| Friday  | Saturday|" << std::endl;
-		//cout << weekNumber << std::setw(2 - std::to_string(weekNumber).length()) <<
 		std::cout << "|   " << std::setw(2) << days[0] <<
 			"    |   " << std::setw(2) << days[1] <<
 			"    |   " << std::setw(2) << days[2] <<

@@ -2,23 +2,13 @@
 // Joshua Ham
 
 #define __STDC_WANT_LIB_EXT1__ 1
-#include <algorithm>
-#include <cereal/archives/binary.hpp> // Include the cereal headers
-#include <cereal/types/map.hpp> // Include the cereal headers
-#include <cereal/types/string.hpp> // Include the cereal headers
-#include <chrono>
-#include <ctime>
-#include <fstream>
-#include <iomanip>
-#include <iostream>
-#include <map>
-#include <string>
-#include <vector> 
-
 //Custom class
 #include "calendar.hpp"
+#include "ID.hpp"
 
-
+#include <algorithm> // Used for clamp and transform
+#include <ctime> // Used for tm
+#include <iostream> // Used for set
 
 int main() {
 	using namespace std;
@@ -32,7 +22,7 @@ int main() {
 	tm now;
 	localtime_s(&now, &t);
 
-	string todayID = cal::dateToID(now);
+	string todayID = dateToID(now);
 	cout << "Today is  " << put_time(&now, "%c") << endl;
 	cout << "ID is " << todayID << endl << endl;
 
@@ -68,7 +58,7 @@ int main() {
 			break;
 		}
 	}
-	string inputID = cal::dateToID(inputDateTime);
+	string inputID = dateToID(inputDateTime);
 
 	cout << "ID is " << inputID << endl << endl;
 
@@ -114,7 +104,6 @@ int main() {
 			continue; // Skip the rest of the loop
 		}
 		// Success
-	// Use setw and setfill to format the output
 		cout << "You entered: " << temp << endl;
 		notes.dayQuality = temp;
 		break;
@@ -145,7 +134,6 @@ int main() {
 			continue; // Skip the rest of the loop
 		}
 		// Success
-	// Use setw and setfill to format the output
 		cout << "You entered: " << temp << endl;
 		notes.sleepQuality = temp;
 		break;
