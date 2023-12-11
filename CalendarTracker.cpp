@@ -5,6 +5,7 @@
 //Custom class
 #include "calendar.hpp"
 #include "ID.hpp"
+#include "UI.hpp"
 
 #include <algorithm> // Used for clamp and transform
 #include <ctime> // Used for tm
@@ -14,8 +15,8 @@ int main() {
 	using namespace std;
 
 	// Load Calendar data
-	cal::Calendar myCalendar = cal::loadFromFile("calendar");
-	cal::DayNotes retrievedNotes;
+	Calendar myCalendar = loadFromFile("calendar");
+	DayNotes retrievedNotes;
 
 	// Get the current time
 	time_t t = time(0);
@@ -28,7 +29,7 @@ int main() {
 
 
 	// Draw Calendar
-	cal::drawCalendar(todayID);
+	drawCalendar(todayID);
 	// Display today's Notes
 	retrievedNotes = myCalendar.getDayNotes(todayID);
 	displayNotes(retrievedNotes);
@@ -63,7 +64,7 @@ int main() {
 	cout << "ID is " << inputID << endl << endl;
 
 	// Draw Calendar
-	cal::drawCalendar(inputID);
+	drawCalendar(inputID);
 
 	// Retrieve and print notes for the day
 	cout << "Current Notes: " << endl;
@@ -77,7 +78,7 @@ int main() {
 
 
 	// Add notes for a day
-	cal::DayNotes notes;
+	DayNotes notes;
 
 
 	// Day Quality
