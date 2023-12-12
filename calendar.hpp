@@ -17,17 +17,18 @@
 	// Class to represent notes for a day
 class DayNotes {
 public:
+	bool exists;
 	int dayQuality;
 	int sleepQuality;
 	bool tookMeds;
 
-	DayNotes() : dayQuality(0), sleepQuality(0), tookMeds(false) {}
+	DayNotes() : exists(false), dayQuality(0), sleepQuality(0), tookMeds(false) {}
 
 	// Define a serialize function for DayNotes
 	template <class Archive>
 	void serialize(Archive& archive)
 	{
-		archive(dayQuality, sleepQuality, tookMeds); // Serialize the members
+		archive(exists, dayQuality, sleepQuality, tookMeds); // Serialize the members
 	}
 };
 

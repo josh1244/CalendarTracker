@@ -170,6 +170,7 @@ int main() {
 	}
 	cout << endl;
 
+	notes.exists = true;
 
 	myCalendar.addDay(inputID, notes);
 
@@ -187,7 +188,6 @@ int main() {
 Next steps
 Loop script
 Change what notes can contain
-If notes for that day does not exist, then say "no notes for day" instead of 0's
 Move Notes for day under that day
 Highlight Current day
 

@@ -10,10 +10,16 @@
 
 	// Function to display notes
 void displayNotes(DayNotes Notes) {
-	std::cout << "Day Quality: " << Notes.dayQuality << std::endl;
-	std::cout << "Sleep Quality: " << Notes.sleepQuality << std::endl;
-	std::cout << "Took Meds: " << (Notes.tookMeds ? "Yes" : "No") << std::endl;
-	std::cout << std::endl;
+	if (Notes.exists) {
+		std::cout << "Day Quality: " << Notes.dayQuality << std::endl;
+		std::cout << "Sleep Quality: " << Notes.sleepQuality << std::endl;
+		std::cout << "Took Meds: " << (Notes.tookMeds ? "Yes" : "No") << std::endl;
+		std::cout << std::endl;
+	}
+	else {
+		std::cout << "No notes yet" << std::endl;
+		std::cout << std::endl;
+	}
 }
 
 // Function to draw Calendar
